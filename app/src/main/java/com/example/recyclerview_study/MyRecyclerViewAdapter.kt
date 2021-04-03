@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 //onCreateViewHolder, onBindViewHolder, getItemCount
 
 //fruitslist를 생성자 매개 변수로 추가해준다
-class MyRecyclerViewAdapter(val fruitsList:List<Fruit>):RecyclerView.Adapter<MyViewHolder>() {
+class MyRecyclerViewAdapter(private val fruitsList:List<Fruit>, private val clickListener:(Fruit)->Unit):RecyclerView.Adapter<MyViewHolder>() {
     //이와 같이 어댑터 내부에 정의 하는건 좋은 습관이 아닙니다
 //    val fruitsList = listOf("Mango","Apple","Banana","Guava","Lemon","Pear","Orange")
 
@@ -28,11 +28,10 @@ class MyRecyclerViewAdapter(val fruitsList:List<Fruit>):RecyclerView.Adapter<MyV
 
 
     //onBindViewHolder를 사용하여 데이터를 표시
+    //position은 목록 항목의 위치 값을 나타냅니다
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val fruit = fruitsList[position]
-        //position은 목록 항목의 위치 값을 나타냅니다
-        holder.view.findViewById<TextView>(R.id.name_text_view).text = fruit.name
-
+        //onBindViewHolder의 매개변수를 MyViewHolder로 넘겨줘야한다
+        holder.bind(fruitsList[position], clickListener)
     }
 
     //어댑터가 보유한 데이터 세트의 총 항목 수 리턴
@@ -43,8 +42,16 @@ class MyRecyclerViewAdapter(val fruitsList:List<Fruit>):RecyclerView.Adapter<MyV
 }
 
 //별도의 파일에서 이 작업을 할수 있지만 ViewHolder클래스를 사용하는 것이 훨씬 쉽다
+//MyViewHolder에서 onBindViewHolder의 역할을 수행하는것이 객체지향 프로그래밍의 모범 사례이다
 class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view){
     //위쪽에서 MyViewHolder 클래스에서 ViewHolder에 인수로 뷰를 전달해야 하기 때문에 (view)를 썼다
+
+    fun bind(fruit: Fruit,  clickListener:(Fruit)->Unit){
+        view.findViewById<TextView>(R.id.name_text_view).text = fruit.name
+        view.setOnClickListener {
+            clickListener(fruit)
+        }
+    }
 
 
 }

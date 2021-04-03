@@ -4,6 +4,7 @@ import android.database.DatabaseUtils
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerview_study.databinding.ActivityMainBinding
@@ -25,8 +26,15 @@ class MainActivity : AppCompatActivity() {
 
         //MyRecyclerViewAdapter 클래스를 RecyclerView의 어댑터로 설정
         //MyRecyclerViewAdapter.kt에서 fruitslist를 생성자 매개 변수로 추가했기 때문에 인수로 fruitsList를 넘겨줍니다
-        binding.myRecyclerView.adapter = MyRecyclerViewAdapter(fruitsList)
+        //람다식을 이용해 개체를 함수에 전달
+        binding.myRecyclerView.adapter = MyRecyclerViewAdapter(fruitsList, {selectedFruitItem:Fruit->listItemClicked(selectedFruitItem)})
 
+    }
+
+    //kotlin의 고차 함수와 람다식을 이용해 java보다 훨씬 쉽게 사용가능
+    private fun listItemClicked(fruit : Fruit){
+        Toast.makeText(this@MainActivity,
+        "Supplier name is ${fruit.supplier}",Toast.LENGTH_SHORT).show()
     }
 
 }
